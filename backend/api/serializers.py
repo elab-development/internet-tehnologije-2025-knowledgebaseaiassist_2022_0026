@@ -4,13 +4,13 @@ from rest_framework import serializers
 # serializer pajton objekte transformise u json i obrnuto
 
 class UserSerializer(serializers.ModelSerializer):
-    class Meta: # definisemo sta pakujemo u json
+    class Meta: # metapodaci, definisemo sta pakujemo u json
         model = User
-        fields = ["id","username","password","first_name","last_name"] # mozemo da dodamo email
+        fields = ["id","username","password","email","first_name","last_name","is_superuser"] # mozemo da dodamo email
         extra_kwargs = {"password":{"write_only":True}} # prihvatamo sifru ali ne vracamo kao podatak
         # django apparently automatski hendluje id
 
     def create(self,provereni_podaci):
-        user = User.objects.create_user(**provereni_podaci)
+        user = User.objects.create_user(**provereni_podaci) # raspakuje podatke
         # create_user hashuje sifru u bazi
         return user
