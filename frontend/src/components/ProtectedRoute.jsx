@@ -28,7 +28,7 @@ function ProtectedRoute({children}){
             });
             // nastavlja se funkcija tek kad smo dobili odgovor
             if(response.status==200){ // uspesno refreshovan token
-                localStorage.setItem(ACCES_TOKEN, response.data.access)
+                localStorage.setItem(ACCESS_TOKEN, response.data.access)
                 setIsAuthorized(true)
             }
             else{
@@ -45,14 +45,14 @@ function ProtectedRoute({children}){
 
     // funkcija za proveru autorizacije
     const auth = async () => {
-        const token = localStorage.getItem(ACCES_TOKEN);
+        const token = localStorage.getItem(ACCESS_TOKEN);
         if(!token){
             // ako ne postoji access token, znaci da korisnik nije ulogovan
             setIsAuthorized(false)
             return
         }
         const decoded = jwtDecode(token) // dekodiran tokeb
-        const tokenExp = decoded.tokenExp // datum kad istice token
+        const tokenExp = decoded.exp // datum kad istice token
         const now = Date.now() /1000 // da bude u sekundama
 
         if(tokenExp<now){

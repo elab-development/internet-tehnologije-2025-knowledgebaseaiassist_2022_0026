@@ -31,6 +31,7 @@ function App() {
         <Route path = "/assistant_chat" element={ <ProtectedRoute> <AIChat/> </ProtectedRoute>}/>
         <Route path = "/document_manager" element={ <ProtectedRoute> <DocumentManager/> </ProtectedRoute>}/>
         <Route path = "/login" element={ <Login/>}/>
+        <Route path = "/logout" element={ <Logout/>}/>
         <Route path = "/register" element={ <Register/>}/>
         <Route path = "*" element={ <NotFound/>}/>
 

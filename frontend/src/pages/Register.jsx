@@ -1,4 +1,6 @@
+import AuthForm from "../components/AuthForm"
+
 function Register(){
-    return <div>Register</div>
+    return <AuthForm route="/api/user/register/" method="register"/>
 }
 export default Register

@@ -1,4 +1,6 @@
+import AuthForm from "../components/AuthForm"
+
 function Login(){
-    return <div>LOGIN</div>
+    return <AuthForm route="/api/token/get" method="login"/>
 }
 export default Login
