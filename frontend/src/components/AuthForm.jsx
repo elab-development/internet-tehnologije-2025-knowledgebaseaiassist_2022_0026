@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom"
 import { ACCESS_TOKEN } from "../constants"
 import { REFRESH_TOKEN } from "../constants"
 import FormField from "./FormField"
+import ButtonComponent from "./ButtonComponent.jsx"
+
+import "../styles/AuthForm.css"
 
 // forma koja se koristi za login i za registraciju
 // method je string koji nam ukazuje na to o kojoj od ove dve metode se radi
@@ -66,15 +69,16 @@ function AuthForm({route,method}){
     }
 
     const formName = method==="login"?"Login":"Register"
-    const buttonName = loading?"LOADING...":(method==="login"?"LOGIN":"REGISTER")
+    const buttonName = loading?"LOADING...":(method==="login"?"login":"create an acc")
 
 
-    return <form onSubmit={handleSubmit} className="auth-form">
-            <h1>{formName}</h1>
+    return <div className="min-h-screen  w-full flex flex-col items-center justify-center">
+            <form onSubmit={handleSubmit} className="flex flex-col items-center auth-form gap-12">
+            <h1 className="font-dots text-8xl">{formName}</h1>
 
             {/*naredna tri polja se prikazuju samo u slucaju registracije*/}
             {isRegister&&(
-                <>
+                <div className="flex flex-col gap-12">
                 <FormField
                 value={first_name}
                 type="text"
@@ -96,7 +100,7 @@ function AuthForm({route,method}){
                 placeholder="email"
                 onChange={(e)=>setEmail(e.target.value)}
                 ></FormField>
-                </>
+                </div>
             )}
 
             <FormField
@@ -113,8 +117,10 @@ function AuthForm({route,method}){
             onChange={(e)=>setPassword(e.target.value)}
             ></FormField>
 
-            <button className="submit-button" type="submit"> {buttonName} </button>
+            
+            <ButtonComponent label={buttonName}></ButtonComponent>
 
     </form>
+    </div>
 }
 export default AuthForm

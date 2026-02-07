@@ -8,6 +8,7 @@ import Register from './pages/Register'
 import AIChat from './pages/AIChat'
 import DocumentManager from './pages/DocumentManager'
 import ProtectedRoute from './components/ProtectedRoute'
+import './output.css'
 
 
 function Logout(){
@@ -28,7 +29,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path = "/" element={ <ProtectedRoute> <Home/> </ProtectedRoute>}/>
-        <Route path = "/assistant_chat" element={ <ProtectedRoute> <AIChat/> </ProtectedRoute>}/>
+        <Route path = "/ai_chat" element={ <ProtectedRoute> <AIChat/> </ProtectedRoute>}/>
         <Route path = "/document_manager" element={ <ProtectedRoute> <DocumentManager/> </ProtectedRoute>}/>
         <Route path = "/login" element={ <Login/>}/>
         <Route path = "/logout" element={ <Logout/>}/>
