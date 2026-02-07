@@ -15,7 +15,7 @@ from datetime import timedelta
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+load_dotenv() 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -35,13 +35,14 @@ ALLOWED_HOSTS = ["*"] # dozvoljeno svima da hostuju aplikaciju
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+        'rest_framework.authentication.SessionAuthentication' # ovo obrisati cim se doda front
     ),
     "DEFAULT_PERMISSION_CLASSES": [ # samo ulogovani smeju da pristupe
-        "rest_framework.permissions.IsAuthenticated", # mozda ce ovo biti problem, rute zakljucane
+        "rest_framework.permissions.IsAuthenticated", # pristupanje endpointima smo ako je auth
     ],
 }
 
-SIMPLE_JWT = { # podesavanja JWT tokena
+SIMPLE_JWT = { 
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
@@ -54,8 +55,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "api",
-    "rest_framework",
+    "api.apps.ApiConfig",
+    "rest_framework",# registruje DRF, odatle uziammo stvari za api kreiranje i za serializers
     "corsheaders" # dozvoljava komunikaciju izmedju razlicitih domena, tj bekend i frontend
 ]
 
