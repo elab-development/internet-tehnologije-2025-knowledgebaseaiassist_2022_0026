@@ -1,4 +1,3 @@
-
 import react from 'react'
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
 import Login from './pages/Login'
@@ -9,7 +8,6 @@ import AIChat from './pages/AIChat'
 import DocumentManager from './pages/DocumentManager'
 import ProtectedRoute from './components/ProtectedRoute'
 import './output.css'
-
 
 function Logout(){
   localStorage.clear()
@@ -24,7 +22,6 @@ function RegisterAndLogout(){
 
 function App() {
 
-
   return (
     <BrowserRouter>
       <Routes>
@@ -35,8 +32,6 @@ function App() {
         <Route path = "/logout" element={ <Logout/>}/>
         <Route path = "/register" element={ <Register/>}/>
         <Route path = "*" element={ <NotFound/>}/>
-
-
       </Routes>
     </BrowserRouter>
   )

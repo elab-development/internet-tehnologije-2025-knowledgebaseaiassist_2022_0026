@@ -11,7 +11,6 @@ function ProtectedRoute({children}){
     // kad se pozove setIsAuthorized, tj fja koju useState vraca, ponovo se pokrece funkcija, tj refreshuje stranica maltene, 
     // samo se drugo stanje prosledjuje u useState, i samim tim dodeljuje promenljivoj isAuthorized/jeUlogovan
 
-
     useEffect(()=>{
         auth().catch(()=>setIsAuthorized(false))
     },[]) // nema zavisnosti tkd ce se useEffect pokrenuti SAMO JEDNOM kad se pokrene stranica
@@ -23,7 +22,7 @@ function ProtectedRoute({children}){
             // preko axios instance api koju smo kreirali saljemo POST zahtev
             // putanji za refresh token, a u telu saljemo token koji smo malopre dobili
             // odgovor bekenda cuvamo u response
-            const response = await api.post("/api/token/refresh",{ 
+            const response = await api.post("/api/token/refresh/",{ 
                 refresh: refreshToken,
             });
             // nastavlja se funkcija tek kad smo dobili odgovor
@@ -34,13 +33,11 @@ function ProtectedRoute({children}){
             else{
                 setIsAuthorized(false)
             }
-
         }
         catch(error){
             console.log(error)
             setIsAuthorized(false)
         }
-
     }
 
     // funkcija za proveru autorizacije
@@ -64,7 +61,7 @@ function ProtectedRoute({children}){
             setIsAuthorized(true)
     }
 
-    if( isAuthorized === null){
+    if(isAuthorized === null){
         // dok neki state u useState koji nije null
         return <div>Loading...</div>
     }
@@ -72,10 +69,9 @@ function ProtectedRoute({children}){
     if(isAuthorized)
         return children
     else
-        return <Navigate to="/login"/> 
+        return <Navigate to="/login"/>
     // prikazujemo sve komponente tj children ako je ulogovan, 
     // ako nije, redirektujemo na login page
-    
-
 }
+
 export default ProtectedRoute

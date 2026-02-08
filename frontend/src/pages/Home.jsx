@@ -32,15 +32,16 @@ function Home(){
 
 
         <SideMenuComponent
-        navigateTo="/ai_chat"
-        label = "AI chat"
-        side = "right"
+            navigateTo="/ai_chat"
+            label = "AI chat"
+            side = "right"
         ></SideMenuComponent>
         <SideMenuComponent
-        navigateTo="/document_manager"
-        label = "document manager"
-        side = "left"
+            navigateTo="/document_manager"
+            label = "document manager"
+            side = "left"
         ></SideMenuComponent>
     </div>
 }
+
 export default Home

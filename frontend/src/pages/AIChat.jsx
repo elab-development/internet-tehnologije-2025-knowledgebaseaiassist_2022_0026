@@ -32,15 +32,16 @@ function AIChat(){
             
         </main>
         <SideMenuComponent
-        navigateTo="/"
-        label = "home"
-        side = "left"
+            navigateTo="/"
+            label = "home"
+            side = "left"
         ></SideMenuComponent>
         <SideMenuComponent
-        navigateTo="/document_manager"
-        label = "document manager"
-        side = "right"
+            navigateTo="/document_manager"
+            label = "document manager"
+            side = "right"
         ></SideMenuComponent>
     </div>
 }
+
 export default AIChat

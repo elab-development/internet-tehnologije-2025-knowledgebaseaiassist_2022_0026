@@ -75,4 +75,5 @@ function DocumentManager(){
         </aside>
     </div>
 }
+
 export default DocumentManager

@@ -16,18 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from api.views import CreateUserView
-from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 # predefinisani viewovi koji nam omogucavaju upravljanje sa access i refresh tokenima
  
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/user/register/',CreateUserView.as_view(), name='register'), # registracija
-    path('api/token/', TokenObtainPairView.as_view(), name='get_token'), # dobijanje access tokena
-    path('api/token/refresh/', TokenRefreshView.as_view(), name="refresh"), # dobijanje refresh tokena
-    path('api-auth/', include("rest_framework.urls")) # ukljucujemo sve urlove iz rest frejmworka
-
-
-
+    path("api/", include("api.urls")),
+    path('api-auth/', include("rest_framework.urls")), # ukljucujemo sve urlove iz rest frejmworka
 ]
