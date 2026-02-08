@@ -1,0 +1,22 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Raleway+Dots&display=swap');
+
+@import "tailwindcss";
+
+/* Ovdje definišeš custom klase ako želiš */
+@theme {
+  --font-raleway: "Raleway", sans-serif;
+  --font-dots: "Raleway Dots", system-ui;
+}
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    font-family: "Raleway", sans-serif;
+    font-weight: 300; 
+  }
+}
