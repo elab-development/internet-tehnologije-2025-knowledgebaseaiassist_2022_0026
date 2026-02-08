@@ -1,4 +1,4 @@
-function FormField({ label, type, value, onChange, placeholder }) {
+function FormField({ label, type, value,className, onChange, placeholder }) {
   return (
     <div className="flex flex-col gap-2" >
         {label &&(
@@ -8,9 +8,10 @@ function FormField({ label, type, value, onChange, placeholder }) {
                 {label}
             </label>)}
       
-      <div className="relative h-12 w-72 ">
-      <div className="absolute inset-0 bg-gray-200 blur-sm pointer-events-none"></div>
-      <input className="relative h-full z-10 w-full bg-transparent text-black text-right pr-4"
+       {/* da bismo mogli da prilagodimo nesto specificno */}
+      <div className={`relative h-12 w-72 ${className}`}>
+      <div className="absolute inset-0 bg-[#E7E7E7] blur-sm pointer-events-none"></div>
+      <input className="relative h-full z-10 w-full bg-transparent text-black text-right pr-4 focus:outline-none"
         type={type}
         value={value}
         onChange={onChange}

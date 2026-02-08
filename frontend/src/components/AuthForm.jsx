@@ -116,9 +116,11 @@ function AuthForm({route,method}){
                 
                 <ButtonComponent label={buttonName}></ButtonComponent>
 
-            </form>
-        </div>
-    )
+            
+            <ButtonComponent label={buttonName} textColor=" text-[#DEFF5C]"></ButtonComponent>
+
+    </form>
+    </div>
 }
 
 export default AuthForm
