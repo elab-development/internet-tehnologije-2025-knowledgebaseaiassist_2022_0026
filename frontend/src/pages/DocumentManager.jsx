@@ -18,6 +18,7 @@ function DocumentManager(){
 
     const handleEdit = (id) => console.log("Editujem dokument:", id);
     const handleDelete = (id) => alert("Da li ste sigurni da želite da obrišete dokument " + id + "?");
+
     return <div className="flex min-h-screen">
         {/*glavni sadrzaj stranice */}
         <main className="flex-1 flex flex-col">
@@ -59,4 +60,5 @@ function DocumentManager(){
         </aside>
     </div>
 }
+
 export default DocumentManager

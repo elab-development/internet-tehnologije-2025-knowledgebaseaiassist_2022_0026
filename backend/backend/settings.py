@@ -35,7 +35,6 @@ ALLOWED_HOSTS = ["*"] # dozvoljeno svima da hostuju aplikaciju
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        'rest_framework.authentication.SessionAuthentication' # ovo obrisati cim se doda front
     ),
     "DEFAULT_PERMISSION_CLASSES": [ # samo ulogovani smeju da pristupe
         "rest_framework.permissions.IsAuthenticated", # pristupanje endpointima smo ako je auth
@@ -43,7 +42,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = { 
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 # Application definition

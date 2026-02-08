@@ -14,7 +14,7 @@ class Tag(models.Model):
 class Document(models.Model):
     title = models.CharField(max_length=255)
     file = models.FileField(upload_to="documents/")
-    file_type = models.CharField(max_length=10) # izmeniti da sistem sam prepozna fajl tip i dodati samo da se prihvataju predefinisani tipvo
+    file_type = models.CharField(max_length=10) 
     uploaded_at = models.DateTimeField(auto_now_add=True)
     description = models.TextField(blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="documents")

@@ -1,6 +1,5 @@
-// axios interceptor - presrece zahteve i automatski daje adekvatan header
+// axios interceptor - presrece zahteve i automatski daje adekvatan header, komunikacija sa apijima
 // proverava da li imamo access token i dodaje zahtevu automatski ako imamo PREDOBROOOOOOO
-
 import axios from "axios"
 import {ACCESS_TOKEN} from "./constants"
 
@@ -12,7 +11,7 @@ const api = axios.create({
 
 api.interceptors.request.use( // definisemo sta jos nas api treba da odradi pre nego sto dalje prosledi zahtev koji je dobio
     // request.use prima dve funkcije kao argumente:
-    (config) => {
+    (config) => {// config je zapravo ceo zahtev
         const token = localStorage.getItem(ACCESS_TOKEN); // uzimam access token iz lokalne memorije browsera, ako tokena ima, tj ako je korisnik ulogovan
         if(token){
             config.headers.Authorization = `Bearer ${token}` // ako je ulogovan, dodajemo headeru zahteva jwt token
