@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import FormField from "./FormField"
 import ButtonComponent from "./ButtonComponent"
+import api from "../api"
 
 function UploadForm({isOpen, onClose}){
 
@@ -12,19 +13,72 @@ const [docDescription,setDocDescription]=useState("")
 const [tagName,setTagName]=useState("")
 const [tagColor,setTagColor]=useState("#DEFF5C")
 const [docTags,setDocTags]=useState([])
+const [loading, setLoading]= useState(false)
 
 if(!isOpen)return
 
-const handleSubmit = async (e)=>{}
 
-const onAddTag = async (e)=>{}
+const resetForm = () => {
+    setDocTitle("");
+    setUploadedFile(null);
+    setDocDescription("");
+    setTagName("");
+    setTagColor("#DEFF5C");
+    setDocTags([]); // OVO JE KLJUČNO - praznimo listu tagova
+};
+
+const handleSubmit = async (e)=>{
+    setLoading(true);
+    e.preventDefault()
+
+    // moramo da koristimo FormData jer inace bi se fajlovi slali u JSON formatu, nego zapravo se cuvali fajlovi
+    const formData = new FormData();
+    formData.append("title", docTitle);
+    formData.append("description", docDescription);
+    formData.append("file", uploadedFile);
+
+    if(docTags.length>0){ //ako nisu dodati tagovi ne saljemo ih
+    docTags.forEach(tag => {
+        formData.append("tags", tag.id); // izvlacimo ideve jer mi ne da ceo objekat da prosledim
+    });}
+    try{
+        await api.post("/api/document/upload/",formData)
+        resetForm(); // resetuje polja, "cisti memoriju" nakon zatvaranja forme
+        onClose();
+    }
+    catch(error){
+        alert("Unsucessful file upload")
+    }
+    finally{setLoading(false)
+}
+    
+}
+
+const onAddTag = async (e)=>{
+    e.preventDefault()
+    const newTag = {
+        name: tagName,
+        color: tagColor
+    }
+
+    try{
+        const response = await api.post("/api/tag/create/",newTag)
+        const newTagFull = response.data;
+        setDocTags(prevtags=>[...prevtags,newTagFull]) // dodajemo listi tagova ovog dokumenta novi tag
+        setTagName("")
+
+    }
+    catch(error){
+        alert("Unsuccessful tag creation")
+    }
+}
 
 
 
-return <div className="fixed z-[100] m-12 w-288 h-auto flex items-center self-center justify-center bg-black/60 backdrop-blur-sm  drop-shadow-md ">
-            <div className="bg-[#575757]    rounded-2xl w-full  shadow-2xl relative">
+return <div className="fixed z-[100]   w-288 h-auto flex items-center self-center justify-center  backdrop-blur-xs  drop-shadow-md ">
+            <div className="bg-[#575757] m-12 p-12  rounded-2xl w-full  shadow-2xl relative">
                 
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-12 ">
                     <FormField 
                         type="text" 
                         placeholder="title" 
@@ -36,9 +90,8 @@ return <div className="fixed z-[100] m-12 w-288 h-auto flex items-center self-ce
                     <FormField 
                         type="file" 
                          className="p-2 border-2 border-dotted border-black/10"
-                        onChange={(e) => setUploadedFile(e.target.files[0])} // Uzimamo prvi fajl
-                        required
-                    />
+                        onChange={(e) => setUploadedFile(e.target.files[0])} // uzimamo prvi fajl
+                        required/>
 
                     <div className="relative">
                     <div className="absolute inset-0 bg-[#E7E7E7] blur-sm pointer-events-none"></div>
@@ -49,7 +102,7 @@ return <div className="fixed z-[100] m-12 w-288 h-auto flex items-center self-ce
                     /></div>
 
                     {/* za tagove */}
-                    <div className="flex w-120">
+                    <div className="flex w-120 gap-12">
                     <FormField 
                         type="text" 
                         placeholder="tag name" 
@@ -62,10 +115,10 @@ return <div className="fixed z-[100] m-12 w-288 h-auto flex items-center self-ce
                         onChange={(e) => setTagColor(e.target.value)}
                         className="flex-1  w-12 h-12 "
                     ></input>
-                    <button type="button" onClick={onAddTag} className="flex-1 text-xs w-12 h-12 bg-[#DEFF5C]/30 text-white uppercase">add tag</button>
+                    <button type="button" onClick={onAddTag} className="flex-1 text-xs w-12 h-12 bg-[#DEFF5C]/30 text-white uppercase ">add tag</button>
                     </div>
-
-                    <ButtonComponent label="upload" className="bg-[#DEFF5C] " textColor="text-[#575757]"></ButtonComponent>
+                    <div className="flex items-center">
+                    <ButtonComponent label="upload" className="bg-[#DEFF5C] " textColor="text-[#575757]"></ButtonComponent></div>
                     <button type="button" onClick={onClose} className="text-xs text-gray-400 uppercase">Cancel</button>
                 </form>
             </div>

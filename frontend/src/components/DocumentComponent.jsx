@@ -20,23 +20,27 @@ function DocumentComponent({doc, onDelete, onEdit}){
                         {doc.title}
                     </h3>
                     <span className="text-xs font-bold m-4   text-[#575757] uppercase">
-                        {doc.doc_type}
+                        {doc.file_type}
                     </span>
                 </div>
             
             <div className="flex-1"></div>
             {/* tagovi */}
             <div className="flex flex-2 gap-2 justify-end">
-                {doc.tags.map((tag, index) => (
-                    <span key={index} className="text-xs bg-gray-100 text-gray-600 rounded-full">
-                        {tag}
+                {/* for each petlja koja prolazi kroz svaki tag u listi ovog dokumenta, na osnovu id-a uzima ime i boju */}
+                {/* map pretvara elemente u html tj jsx komponente */}
+                {doc.tags.map((tag) => (
+                    <span key={tag.id} 
+                    style={{ backgroundColor: tag.color }}
+                    className={`text-xs text-gray-600 rounded-full`}>
+                        {tag.name}
                     </span>
                 ))}
             </div>
 
             {/* datum i dugmici */}
             <div className="flex flex-col gap-3">
-                    uploaded {formatDate(doc.created_at)}
+                    uploaded {formatDate(doc.uploaded_at)}
             </div>
 
                 <div className="h-12 w-12 flex gap-2 items-center justify-center">

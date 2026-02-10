@@ -67,6 +67,7 @@ function AuthForm({route,method}){
 
     const formName = method==="login"?"Login":"Register"
     const buttonName = loading?"LOADING...":(method==="login"?"login":"create an acc")
+    const additionalText = method==="login"?"Create an account":"Log in instead"
 
     return (
         <div className="min-h-screen  w-full flex flex-col items-center justify-center">
@@ -114,13 +115,14 @@ function AuthForm({route,method}){
                     onChange={(e)=>setPassword(e.target.value)}
                 ></FormField>
                 
-                <ButtonComponent label={buttonName}></ButtonComponent>
 
             
             <ButtonComponent label={buttonName} textColor=" text-[#DEFF5C]"></ButtonComponent>
 
     </form>
-    </div>
+    
+    <button type="button" className="flex hover:underline p-12"> {additionalText}</button>
+    </div>);
 }
 
 export default AuthForm
