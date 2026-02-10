@@ -18,10 +18,10 @@ class Document(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
     description = models.TextField(blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="documents")
-    tags = models.ManyToManyField(Tag, related_name="documents") # django kreira join table
+    tags = models.ManyToManyField(Tag, related_name="documents", blank=True) # django kreira join table
 
     def __str__(self):
-        return f"title: {self.title}, file: {self.file}, file_type: {self.file_type}, uploaded_at: {self.uploaded_at}, description: {self.description}, user_id: {self.user}"
+        return f"title: {self.title}, file: {self.file}, file_type: {self.file_type}, description: {self.description}, user_id: {self.user}"
 
 class Conversation(models.Model):
     name = models.CharField(max_length=20)
@@ -32,3 +32,11 @@ class Conversation(models.Model):
 
     def __str__(self):
         return f"name: {self.name}, dateTimeCreated: {self.dateTimeCreated}, isSaved: {self.isSaved}, user_id: {self.user}"
+
+class Paragraph(models.Model):
+    content = models.TextField()
+    position = models.IntegerField()
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name="paragraphs")
+
+    def __str__(self):
+        return f"doc: {self.document.title}, content {self.content}, position: {self.position})"
