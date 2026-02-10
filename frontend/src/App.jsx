@@ -10,7 +10,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import './output.css'
 
 function Logout(){
-  localStorage.clear()
+  localStorage.clear() // brisanje tokena iz memorije pretrazivaca
   return <Navigate to="/login"/>
 }
 
@@ -30,7 +30,7 @@ function App() {
         <Route path = "/document_manager" element={ <ProtectedRoute> <DocumentManager/> </ProtectedRoute>}/>
         <Route path = "/login" element={ <Login/>}/>
         <Route path = "/logout" element={ <Logout/>}/>
-        <Route path = "/register" element={ <Register/>}/>
+        <Route path = "/register" element={ <RegisterAndLogout/>}/>
         <Route path = "*" element={ <NotFound/>}/>
       </Routes>
     </BrowserRouter>

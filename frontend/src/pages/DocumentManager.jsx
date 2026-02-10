@@ -79,7 +79,7 @@ function DocumentManager(){
         const confirmed = window.confirm("Are you sure you want to delete this document?"); //dijalog za potvrdu
         if(confirmed){
             try{
-                const response = await api.delete(`/document/delete/${id}/`)
+                const response = await api.delete(`/api/document/delete/${id}/`)
                 setDocuments(documents.filter(docum=> docum.id !== id)) // brze brisanje iz liste od getDocuments()
             }
             catch(error){

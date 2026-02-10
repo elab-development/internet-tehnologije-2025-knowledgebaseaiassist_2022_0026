@@ -18,7 +18,14 @@ const [loading, setLoading]= useState(false)
 if(!isOpen)return
 
 
-
+const resetForm = () => {
+    setDocTitle("");
+    setUploadedFile(null);
+    setDocDescription("");
+    setTagName("");
+    setTagColor("#DEFF5C");
+    setDocTags([]); // OVO JE KLJUČNO - praznimo listu tagova
+};
 
 const handleSubmit = async (e)=>{
     setLoading(true);
@@ -36,6 +43,7 @@ const handleSubmit = async (e)=>{
     });}
     try{
         await api.post("/api/document/upload/",formData)
+        resetForm(); // resetuje polja, "cisti memoriju" nakon zatvaranja forme
         onClose();
     }
     catch(error){
