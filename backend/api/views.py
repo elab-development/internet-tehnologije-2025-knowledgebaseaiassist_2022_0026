@@ -24,14 +24,13 @@ class DeleteUserView(generics.DestroyAPIView):
     def get_queryset(self): # ako je staff moze da brise sve, ako nije ne moze nista
         if self.request.user.is_staff:
             return User.objects.all()
-        return User.objects.filter(uesr=self.request.user)
+        return User.objects.filter(user=self.request.user)
 
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_destroy(self, instance):
-        if self.request.user.is_staff:
-            instance.delete()
+        instance.delete()
 
 class UploadDocumentView(generics.ListCreateAPIView): # jer kreiramo red u tabeli
     def get_queryset(self):
@@ -63,7 +62,7 @@ class UploadDocumentView(generics.ListCreateAPIView): # jer kreiramo red u tabel
                         content=paragraph,
                         position=position
                     )
-                position+=1
+                    position+=1
                         
     
 
@@ -117,6 +116,8 @@ class ContinueConversationView(generics.UpdateAPIView): # doraditi kada implemen
 
 class CreateTagView(generics.ListCreateAPIView):    
     def get_queryset(self):
+        if self.request.user.is_staff: # staff moze da brise svacije doc
+            return Tag.objects.all()
         user = self.request.user # trenutno ulogovani
         return Tag.objects.filter(user=user)
     

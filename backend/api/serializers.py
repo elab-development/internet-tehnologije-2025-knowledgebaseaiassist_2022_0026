@@ -30,19 +30,16 @@ class ParagraphSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class DocumentSerializer(serializers.ModelSerializer):
-    tags = serializers.PrimaryKeyRelatedField( many=True, queryset=Tag.objects.all(), required=False )
+    #tags = serializers.PrimaryKeyRelatedField( many=True, queryset=Tag.objects.all(), required=False )
+    
     class Meta:
         model = Document
-        fields = '_all_' # samo uzme sva polja iz document
-        read_only_fields = ['user', 'file_type', 'uploaded_at']
-        extra_kwargs = {"user":{"read_only":True},
-                        "file_type": {"read_only": True}
-        } # setovano od strane backa, nije nesto sto cemo mi uneti
-        #i ovde dodati read only za file type
+        fields = '__all__' # samo uzme sva polja iz document
+        read_only_fields = ['user', 'file_type', 'uploaded_at'] # setovano od strane backa, nije nesto sto cemo mi uneti
 
     # da bi se pri citanju dokumenata iz baze, front dobijao Tag objekte a ne ideve
     def to_representation(self, instance):
-        representation = super().to_representation(instance)
+        representation = super().to_representation(instance) # uzmi instancu dokumenta i nalepi tags
         representation['tags'] = TagSerializer(instance.tags.all(), many=True).data
         return representation
 
@@ -50,7 +47,5 @@ class ConversationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversation
         fields = '__all__'
-        extra_kwargs = {"user":{"read_only":True},
-                        "name": {"read_only":True}
-        }
+        extra_kwargs = {"user":{"read_only":True}}
         
