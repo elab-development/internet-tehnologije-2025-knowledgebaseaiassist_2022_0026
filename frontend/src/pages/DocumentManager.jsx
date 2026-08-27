@@ -25,8 +25,8 @@ function DocumentManager(){
             const response = await api.get("/api/document/upload/"); 
             setDocuments(response.data);
         } catch (error) {
-            console.error("Error while loading the tags:", error);
-            alert("Loading your tags was not successful.");
+            console.error("Error while loading the documents:", error);
+            alert("Loading your documents was not successful.");
         } finally {
             setLoading(false);
         }
@@ -39,8 +39,8 @@ function DocumentManager(){
             const response = await api.get("/api/tag/create/"); 
             setAllTags(response.data);
         } catch (error) {
-            console.error("Error while loading the documents:", error);
-            alert("Loading your documents was not successful.");
+            console.error("Error while loading the tags:", error);
+            alert("Loading your tags was not successful.");
         } finally {
             setLoading(false);
         }
@@ -154,7 +154,7 @@ function DocumentManager(){
                 {
                     setUploadFormOpen(false)
                     getDocuments(); // kad se zatvori forma se refreshuju dokumenta u listi
-
+                    getTags();
                 }}></UploadForm>
 
             <div className="fixed bottom-12  self-center items-center z-50"

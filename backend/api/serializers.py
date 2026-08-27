@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers # most između tvoje baze podataka (gde su podaci u tabelama) i Frontenda (koji razume samo JSON).
-from .models import Document, Conversation, Tag
+from .models import Document, Conversation, Tag, Paragraph
 # prihvatamo json podatke i vracamo json podatke frontendu
 # serializer pajton objekte transformise u json i obrnuto
 
@@ -18,27 +18,34 @@ class UserSerializer(serializers.ModelSerializer): # inheritance
         # create_user hashuje sifru u bazi
         return user # vrati novokreirani objekat user
     
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'
+        extra_kwargs = {"user":{"read_only":True}}
+        
+class ParagraphSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = Paragraph
+        fields = '__all__'
+
 class DocumentSerializer(serializers.ModelSerializer):
+    #tags = serializers.PrimaryKeyRelatedField( many=True, queryset=Tag.objects.all(), required=False )
+    
     class Meta:
         model = Document
         fields = '__all__' # samo uzme sva polja iz document
-        extra_kwargs = {"user":{"read_only":True},
-                        "file_type": {"read_only": True}
-        } # setovano od strane backa, nije nesto sto cemo mi uneti
-        #i ovde dodati read only za file type
+        read_only_fields = ['user', 'file_type', 'uploaded_at'] # setovano od strane backa, nije nesto sto cemo mi uneti
 
+    # da bi se pri citanju dokumenata iz baze, front dobijao Tag objekte a ne ideve
+    def to_representation(self, instance):
+        representation = super().to_representation(instance) # uzmi instancu dokumenta i nalepi tags
+        representation['tags'] = TagSerializer(instance.tags.all(), many=True).data
+        return representation
 
 class ConversationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversation
-        fields = '__all__'
-        extra_kwargs = {"user":{"read_only":True},
-                        "name": {"read_only":True}
-        }
-
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
         fields = '__all__'
         extra_kwargs = {"user":{"read_only":True}}
         
