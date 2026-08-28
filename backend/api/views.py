@@ -66,13 +66,20 @@ class UploadDocumentView(generics.ListCreateAPIView): # jer kreiramo red u tabel
                         
     
 
-class EditDocumentView(generics.UpdateAPIView): 
+class EditDocumentView(generics.UpdateAPIView): # mzd da staff moze da edituje svima
     def get_queryset(self):
         user = self.request.user 
         return Document.objects.filter(user=user)
-    
-    serializer_class = DocumentSerializer 
+
+    serializer_class = DocumentSerializer # ovo mzd ni ne treba
     permission_classes = [IsAuthenticated]
+
+    def perform_update(self, serializer):
+        file_obj = self.request.FILES.get('file')
+        if file_obj: #ako se menja i fajl onda mora da se racuna novi file type
+            serializer.save(file_type=os.path.splitext(file_obj.name)[1])
+        else:
+            serializer.save()
 
 class DeleteDocumentView(generics.DestroyAPIView):
     def get_queryset(self):
