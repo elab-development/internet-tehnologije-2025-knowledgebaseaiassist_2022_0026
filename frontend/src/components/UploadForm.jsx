@@ -3,7 +3,7 @@ import FormField from "./FormField"
 import ButtonComponent from "./ButtonComponent"
 import api from "../api"
 
-function UploadForm({isOpen, onClose}){
+function UploadForm({isOpen, onClose, editingDoc, allTags = []}){
 
 
 // cuvamo vrednosti za kasnije eventualno slanje bekendu
@@ -15,6 +15,22 @@ const [tagColor,setTagColor]=useState("#DEFF5C")
 const [docTags,setDocTags]=useState([])
 const [loading, setLoading]= useState(false)
 
+useEffect(() => {
+    if(editingDoc){
+        setDocTitle(editingDoc.title);
+        setDocDescription(editingDoc.description);
+        setDocTags(editingDoc.tags);
+    }
+    else{
+        setDocTitle("");
+    setUploadedFile(null);
+    setDocDescription("");
+    setTagName("");
+    setTagColor("#DEFF5C");
+    setDocTags([]);
+    }
+}, [editingDoc]); // ako nema editing doc onda samo nista nece da se desi, ako ima, polja ce biti popunjena podacima
+
 if(!isOpen)return
 
 
@@ -24,8 +40,20 @@ const resetForm = () => {
     setDocDescription("");
     setTagName("");
     setTagColor("#DEFF5C");
-    setDocTags([]); // OVO JE KLJUČNO - praznimo listu tagova
+    setDocTags([]);
 };
+
+const availableTags = allTags.filter(tag => !docTags.some(dt => dt.id === tag.id)); // brisemo one koji su vec dodati
+
+    const onSelectExistingTag = (e) => {
+        const tagId = e.target.value;
+        if(!tagId) return; // select tag placeholder je izabran, nema sta dalje
+
+        const tag = allTags.find(t => t.id===Number(tagId));// nalazi se tag koji se dodaje po id
+        setDocTags(prev => [...prev, tag]); //dodaj izabrani tag, odmah se updatuje dropdown
+        
+        e.target.value = ""; //vrati select nazad na placeholder posle izbora
+    };
 
 const handleSubmit = async (e)=>{
     setLoading(true);
@@ -35,19 +63,28 @@ const handleSubmit = async (e)=>{
     const formData = new FormData();
     formData.append("title", docTitle);
     formData.append("description", docDescription);
-    formData.append("file", uploadedFile);
+
+    // izmenio sam ovo vuce, ako se ne doda fajl onda patch, ne menjamo ga
+    if(uploadedFile){
+        formData.append("file", uploadedFile);}
 
     if(docTags.length>0){ //ako nisu dodati tagovi ne saljemo ih
     docTags.forEach(tag => {
         formData.append("tags", tag.id); // izvlacimo ideve jer mi ne da ceo objekat da prosledim
     });}
     try{
-        await api.post("/api/document/upload/",formData)
+        if(editingDoc){
+            await api.patch(`/api/document/edit/${editingDoc.id}/`,formData)
+        }
+        else{
+            await api.post("/api/document/upload/",formData)
+        }
+        
         resetForm(); // resetuje polja, "cisti memoriju" nakon zatvaranja forme
         onClose();
     }
     catch(error){
-        alert("Unsucessful file upload")
+        alert(editingDoc?"Unsucessful file edit":"Unsucessful file upload")
     }
     finally{setLoading(false)
 }
@@ -56,17 +93,17 @@ const handleSubmit = async (e)=>{
 
 const onAddTag = async (e)=>{
     e.preventDefault()
+    if(!tagName.trim()) return;//ispravio bag, ako je prazno ime samo iskuliraj
     const newTag = {
         name: tagName,
         color: tagColor
     }
-
     try{
         const response = await api.post("/api/tag/create/",newTag)
         const newTagFull = response.data;
-        setDocTags(prevtags=>[...prevtags,newTagFull]) // dodajemo listi tagova ovog dokumenta novi tag
+        // dodajemo listi tagova ovog dokumenta novi tag
+        setDocTags(prevtags=>[...prevtags,newTagFull]) 
         setTagName("")
-
     }
     catch(error){
         alert("Unsuccessful tag creation")
@@ -82,6 +119,7 @@ return <div className="fixed z-[100]   w-288 h-auto flex items-center self-cente
                     <FormField 
                         type="text" 
                         placeholder="title" 
+                        value={docTitle}
                         // className="border-b-2 p-2 outline-none focus:border-[#DEFF5C]"
                         onChange={(e) => setDocTitle(e.target.value)}
                         required
@@ -91,21 +129,24 @@ return <div className="fixed z-[100]   w-288 h-auto flex items-center self-cente
                         type="file" 
                          className="p-2 border-2 border-dotted border-black/10"
                         onChange={(e) => setUploadedFile(e.target.files[0])} // uzimamo prvi fajl
-                        required/>
+                        required = {!editingDoc} // ako je edit ne mora fajl da se menja
+                        />
 
                     <div className="relative">
                     <div className="absolute inset-0 bg-[#E7E7E7] blur-sm pointer-events-none"></div>
                     <textarea 
                         placeholder="description (optional)"
+                        value={docDescription}
                         className="relative z-10 w-full h-full border-2 border-dotted border-black/10 p-2 h-24 outline-none rounded-lg"
                         onChange={(e) => setDocDescription(e.target.value)}
                     /></div>
 
                     {/* za tagove */}
-                    <div className="flex w-120 gap-12">
+                    <div className="flex w-160 gap-12">
                     <FormField 
                         type="text" 
                         placeholder="tag name" 
+                        //value={tagName}
                         className=" flex-3 border-b-2 p-2 outline-none"
                         onChange={(e) => setTagName(e.target.value)}
                     />
@@ -115,8 +156,39 @@ return <div className="fixed z-[100]   w-288 h-auto flex items-center self-cente
                         onChange={(e) => setTagColor(e.target.value)}
                         className="flex-1  w-12 h-12 "
                     ></input>
-                    <button type="button" onClick={onAddTag} className="flex-1 text-xs w-12 h-12 bg-[#DEFF5C]/30 text-white uppercase ">add tag</button>
+                    <button type="button" onClick={onAddTag} className="flex-1 text-base w-12 h-12 bg-[#DEFF5C]/30 text-white uppercase ">add tag</button>
+                   
+                    {/*izbor postojecih, cim se izabere odda se*/}
+                    {availableTags.length > 0 && (
+                        <select 
+                            onChange={onSelectExistingTag}
+                            defaultValue=""
+                            className="flex-1 w-12 h-10 bg-[#575757] text-white text-base px-2"
+                        >
+                         <option value="">select existing</option>
+                             {availableTags.map(tag => (
+                         <option key={tag.id} value={tag.id} style={{backgroundColor: tag.color}}>
+                             {tag.name}
+                        </option>
+                            ))}
+                        </select>
+                        )}
+
                     </div>
+                    
+                    
+                    {/*prikazani vec dodatitagovi*/}
+                    {docTags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                            {docTags.map(tag => (
+                                <span key={tag.id} style={{backgroundColor: tag.color}} className="text-base px-2 py-1 rounded-full text-white cursor-pointer transition-all duration-200 hover:blur-lg"
+                                onClick={() => setDocTags(prev => prev.filter(t => t.id!==tag.id))}>
+                                    {tag.name}
+                                    
+                                </span>  ))}
+                        </div>
+                    )}
+
                     <div className="flex items-center">
                     <ButtonComponent label="upload" className="bg-[#DEFF5C] " textColor="text-[#575757]"></ButtonComponent></div>
                     <button type="button" onClick={onClose} className="text-xs text-gray-400 uppercase">Cancel</button>

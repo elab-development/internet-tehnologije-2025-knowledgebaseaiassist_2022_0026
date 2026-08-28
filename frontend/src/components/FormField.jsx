@@ -1,4 +1,4 @@
-function FormField({ label, type, value,className, onChange, placeholder }) {
+function FormField({ label, type, value,className, onChange, placeholder, required }) {
   return (
     <div className="flex flex-col gap-2" >
         {label &&(
@@ -17,7 +17,7 @@ function FormField({ label, type, value,className, onChange, placeholder }) {
         onChange={onChange}
         placeholder={placeholder}
         // style={}
-        required
+        required = {required}
       />
       </div>
     </div>
