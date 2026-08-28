@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .services.rag_pipeline import answer_question
 from .serializers import UserSerializer, DocumentSerializer, ConversationSerializer, TagSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Document,Conversation,Tag, Paragraph
@@ -8,6 +11,41 @@ from docx import Document as WordDocument
 
 import os
 # umesto da se vraca render kao kod klasicnog Djanga, kreiraju se fje/klase koje primaju json podatke za react frontend
+
+class ChatView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        question = request.data.get("question")
+        conversation_id = request.data.get("conversation_id")  # cuvamo koj je konvo
+
+        if not question or not question.strip():
+            return Response({"error": "Pitanje ne sme biti prazno"}, status=400)
+
+        try:
+            result = answer_question(
+                user=request.user, #svaki korisnik izolovana baza znanja, pa mora da se pamti koji je 
+                question=question,
+                model="llama3.2" # moze da bude opciono
+            )
+        except Exception as e:
+            return Response({"error": str(e)}, status=503)
+
+        # cuvamo pitanje i odgovor u konverzaciju postojecu
+        if conversation_id:
+            try:
+                conversation = Conversation.objects.get(id=conversation_id, user=request.user)
+                conversation.conversationContent.append({
+                    "question": question,
+                    "answer": result["answer"],
+                    "sources": result["sources"] #posle samo moramo da iskontrolisemo json format od conversationContent
+                })
+                conversation.save()
+            except Conversation.DoesNotExist:
+                pass  # da se ne prekida odgovor ako ne moze da se cuva konvo
+
+        return Response(result, status=200)
+
 class UserProfileView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
