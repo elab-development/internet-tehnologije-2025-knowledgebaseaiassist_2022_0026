@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-elnew9z(#r83@mudg*lt7ouez-%1#!s*jt5c_=k4hc9o!h5yb%'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-elnew9z(#r83@mudg*lt7ouez-%1#!s*jt5c_=k4hc9o!h5yb%')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -137,5 +137,5 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [os.environ.get('CORS_ALLOWED_ORIGIN', 'http://localhost:5173'),] # moze da se doda posle kad se deployuje na cloud
 CORS_ALLOW_CREDENTIALS = True

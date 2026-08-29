@@ -121,7 +121,13 @@ function AuthForm({route,method}){
 
     </form>
     
-    <button type="button" className="flex hover:underline p-12"> {additionalText}</button>
+    <button 
+    type="button" 
+    onClick={() => navigate(isRegister ? "/login" : "/register")}
+    className="flex hover:underline p-12"
+> 
+    {additionalText}
+</button>
     </div>);
 }
 

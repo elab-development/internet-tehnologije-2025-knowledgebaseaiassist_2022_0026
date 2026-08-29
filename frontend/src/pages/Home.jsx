@@ -9,6 +9,7 @@ function Home(){
     // da bismo dobili ime ulogovanog korisnika
     const [firstName,setFirstName] = useState("");
     const [documents,setDocuments] = useState("");
+    const [isStaff, setIsStaff] = useState(false);
     const [loading,setLoading] = useState("");
     const navigate = useNavigate();
 
@@ -29,6 +30,7 @@ function Home(){
         try {
             const response = await api.get("/api/user/profile/");
             setFirstName(response.data.first_name);
+            setIsStaff(response.data.is_staff);// dal je admin tj staff
         } catch (error) {
             navigate("/login/");
         }
@@ -46,6 +48,15 @@ function Home(){
         
         <div className="ml-18 mr-18 h-screen relative ">
             {/* <div className="fixed bg-black/10 right-4"> */}
+            {isStaff && (
+                    <button
+                        type="button"
+                        className="fixed right-0 p-12 pr-60  hover:underline text-xl self-end align-end justify-end text-right text-black cursor-pointer transition-all active:scale-95"
+                        onClick={() => window.open(`${import.meta.env.VITE_API_URL}/admin/`, "_blank")}
+                    >
+                        Admin Panel
+                    </button>
+                )}
             <button 
                 type="button" 
                 className="  fixed right-0 p-12 pr-30  hover:underline text-xl self-end align-end justify-end text-right text-black cursor-pointer transition-all active:scale-95" 
