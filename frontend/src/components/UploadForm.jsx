@@ -110,6 +110,7 @@ const onAddTag = async (e)=>{
     }
 }
 
+const submitLabel = loading===true?"loading":"upload";
 
 
 return <div className="fixed z-[100]   w-288 h-auto flex items-center self-center justify-center  backdrop-blur-xs  drop-shadow-md ">
@@ -163,7 +164,7 @@ return <div className="fixed z-[100]   w-288 h-auto flex items-center self-cente
                         <select 
                             onChange={onSelectExistingTag}
                             defaultValue=""
-                            className="flex-1 w-12 h-10 bg-[#575757] text-white text-base px-2"
+                            className="flex-2 w-12 h-10 bg-[#575757] text-white text-base px-2"
                         >
                          <option value="">select existing</option>
                              {availableTags.map(tag => (
@@ -190,7 +191,7 @@ return <div className="fixed z-[100]   w-288 h-auto flex items-center self-cente
                     )}
 
                     <div className="flex items-center">
-                    <ButtonComponent label="upload" className="bg-[#DEFF5C] " textColor="text-[#575757]"></ButtonComponent></div>
+                    <ButtonComponent label={submitLabel} className="bg-[#DEFF5C] " textColor="text-[#575757]"></ButtonComponent></div>
                     <button type="button" onClick={onClose} className="text-xs text-gray-400 uppercase">Cancel</button>
                 </form>
             </div>

@@ -4,15 +4,15 @@ from .vector_store import search_similar_paragraphs
 import os
 
 OLLAMA_BASE_URL = os.environ.get('OLLAMA_BASE_URL', 'http://localhost:11434')
-llm = OllamaLLM(model="llama3.2:3b", base_url=OLLAMA_BASE_URL)
+llm = OllamaLLM(model="llama3.2:latest", base_url=OLLAMA_BASE_URL)
 
 prompt_template = PromptTemplate(
     input_variables=["context", "question"],
     template=(
-        "Koristi iskljucivo sledeci kontekst da odgovoris na pitanje. "
-        "Ako odgovor nije sadrzan u kontekstu, reci da ne znas.\n\n"
-        "Kontekst:\n{context}\n\n"
-        "Pitanje: {question}"
+        "Use only the context to generate answers. "
+        "If the answer could not be found in the context, say you dont know the answer.\n\n"
+        "Context:\n{context}\n\n"
+        "Question: {question}"
     )
 )
 

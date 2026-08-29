@@ -154,7 +154,7 @@ class StartConversationView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user, name="New convo")
+        serializer.save(user=self.request.user)
 
 class DeleteConversationView(generics.DestroyAPIView):
     def get_queryset(self):
