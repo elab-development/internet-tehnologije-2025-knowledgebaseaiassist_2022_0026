@@ -33,4 +33,8 @@ backend/*.pyc
 backend/documents/
 backend/api/__pycache__
 backend/api/migrations/__pycache__
+backend/api/services/__pycache__
 backend/backend/__pycache__
+
+#ai / vektorska store
+backend/chroma_db/
