@@ -137,5 +137,5 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [os.environ.get('CORS_ALLOWED_ORIGIN', 'http://localhost:5173'),] # moze da se doda posle kad se deployuje na cloud
 CORS_ALLOW_CREDENTIALS = True

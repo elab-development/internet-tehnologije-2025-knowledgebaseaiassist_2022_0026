@@ -19,7 +19,7 @@ frontend/.env
 .idea
 .DS_Store
 *.suo
-*.ntvs*
+.ntvs
 *.njsproj
 *.sln
 *.sw?
@@ -28,13 +28,14 @@ frontend/.env
 backend/.venv/
 backend/venv/
 backend/.env
+backend/backend/.env
 backend/db.sqlite3
 backend/*.pyc
 backend/documents/
-backend/api/__pycache__
-backend/api/migrations/__pycache__
-backend/api/services/__pycache__
-backend/backend/__pycache__
+backend/api/_pycache_
+backend/api/migrations/_pycache_
+backend/api/services/_pycache_
+backend/backend/_pycache_
 
 #ai / vektorska store
 backend/chroma_db/
