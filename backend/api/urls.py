@@ -17,4 +17,5 @@ urlpatterns = [
     path("tag/create/", views.CreateTagView.as_view(), name="create_tag"),
     path("tag/delete/<int:pk>/", views.DeleteTagView.as_view(), name="delete_tag"),
     path("tag/edit/<int:pk>/", views.EditTagView.as_view(), name="edit_tag"),
+    path("chat/ask/", views.ChatView.as_view(), name="chat_ask"),
 ]

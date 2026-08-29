@@ -27,7 +27,7 @@ class Conversation(models.Model):
     name = models.CharField(max_length=20)
     dateTimeCreated = models.DateTimeField(auto_now_add=True)
     conversationContent = models.JSONField(default=list) # lakse cuvati u jsonu zbog pristupa pitanjima i odgovorima
-    isSaved = models.BooleanField()
+    isSaved = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="conversations")
 
     def __str__(self):
