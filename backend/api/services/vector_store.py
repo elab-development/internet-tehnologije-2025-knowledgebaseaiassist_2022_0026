@@ -6,7 +6,7 @@ from .embeddings import get_embeddings_model
 CHROMA_DIR = str(settings.BASE_DIR / "chroma_db")
 COLLECTION_NAME = "paragraphs"
 
-_vectorstore_instance = None 
+_vectorstore_instance = None
 
 
 def get_vectorstore(): # singleton, vraca instancu za komunikaciju sa bazom
@@ -29,7 +29,7 @@ def add_paragraphs(paragraphs, user_id, document_id, document_title):
     vectorstore = get_vectorstore()
 
     ids = [str(p.id) for p in paragraphs] # lista ideva ali kao str, chroma tako zahteva
-    texts = [p.content for p in paragraphs] 
+    texts = [p.content for p in paragraphs]
     metadatas = [
         {
             "paragraph_id": p.id,
@@ -48,11 +48,10 @@ def delete_document_vectors(document_id):
     vectorstore.delete(where={"document_id": document_id})
 
 
-
 def search_similar_paragraphs(query, user_id, top_k=4):
     vectorstore = get_vectorstore()
     results = vectorstore.similarity_search(query, k=top_k, filter={"user_id": user_id})
-# uzima se pitanje korisnika, pretvara se u vektor i trazi k najslicnijih zapisa u bazi
+    # uzima se pitanje korisnika, pretvara se u vektor i trazi k najslicnijih zapisa u bazi
 
     return [
         {

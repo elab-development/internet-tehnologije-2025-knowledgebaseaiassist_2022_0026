@@ -20,8 +20,11 @@ rag_chain = prompt_template | llm  # langchain expression language,  povezuje pr
 # prvo provuci kroz promptemplate i automatski salji llmu
 
 
-
 def answer_question(user, question, top_k=4):
+    """
+    Glavna RAG funkcija koriscenjem LangChain-a: pretrazuje korisnikove
+    dokumente preko Chroma-e, i generise odgovor preko Ollama LLM-a.
+    """
     matches = search_similar_paragraphs(
         query=question,
         user_id=user.id,
@@ -39,7 +42,7 @@ def answer_question(user, question, top_k=4):
 
     #pokrecemo lanac, i prosledjujemo kontekst i pitanje kojenam je neophodno za prompt teemplate strukturu gore definisanu
     try:
-        answer = rag_chain.invoke({"context": context, "question": question})#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        answer = rag_chain.invoke({"context": context, "question": question})
     except Exception as e:
         raise Exception(f"Greska pri generisanju odgovora: {e}")
 
