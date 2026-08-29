@@ -71,11 +71,12 @@ class DeleteUserView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_destroy(self, instance):
-        instance.delete()
+        if self.request.user.is_staff:
+            instance.delete()
 
 class UploadDocumentView(generics.ListCreateAPIView): # jer kreiramo red u tabeli
     def get_queryset(self):
-        if self.request.user.is_staff: # ako je staff onda vidi sve
+        if self.request.user.is_superuser: # ako je staff onda vidi sve
             return Document.objects.all()
         user = self.request.user # user postaje trenutno ulogovani user
         return Document.objects.filter(user=user) # ne veacamo sve dokumente, nego filtriramo samo one od ulogovanog usera
@@ -132,12 +133,12 @@ class EditDocumentView(generics.UpdateAPIView): # mzd da staff moze da edituje s
 
 class DeleteDocumentView(generics.DestroyAPIView):
     def get_queryset(self):
-        if self.request.user.is_staff: # staff moze da brise svacije doc
+        if self.request.user.is_superuser: # staff moze da brise svacije doc
             return Document.objects.all()
         user = self.request.user 
         return Document.objects.filter(user=user)
-   
-    serializer_class = DocumentSerializer
+    # takodje dodati da admin moz brise sve
+    serializer_class = DocumentSerializer # ovo mzd ni ne treba
     permission_classes = [IsAuthenticated]
 
     def perform_destroy(self, instance):
@@ -171,11 +172,9 @@ class ContinueConversationView(generics.UpdateAPIView): # preimenovanje razgovor
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
 
-class CreateTagView(generics.ListCreateAPIView):    
+class CreateTagView(generics.ListCreateAPIView):
     def get_queryset(self):
-        if self.request.user.is_staff: # staff moze da brise svacije doc
-            return Tag.objects.all()
-        user = self.request.user # trenutno ulogovani
+        user = self.request.user 
         return Tag.objects.filter(user=user)
     
     serializer_class = TagSerializer

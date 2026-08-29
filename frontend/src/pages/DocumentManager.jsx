@@ -15,7 +15,7 @@ function DocumentManager(){
     const [loading, setLoading] = useState(false);
     const [selectedTag , setSelectedTag] = useState("")
     const [selectedType, setSelectedType] = useState("")
-
+    const [editingDoc, setEditingDoc] = useState(null);
     // const getDocument() =>{}
 
 
@@ -40,7 +40,7 @@ function DocumentManager(){
             setAllTags(response.data);
         } catch (error) {
             console.error("Error while loading the tags:", error);
-            alert("Loading your tags was not successful.");
+            alert("Loading your tags was not successful");
         } finally {
             setLoading(false);
         }
@@ -72,7 +72,11 @@ function DocumentManager(){
         created_at: "2026-02-07T16:40:00Z"
     };
 
-    const handleEdit = (id) => alert("editing document:", id);
+    const handleEdit = (id) => {
+    const doc = documents.find(d => d.id === id); // nadje dokument
+    setEditingDoc(doc); // postavi ga za menjanje
+    setUploadFormOpen(true);
+};
 
     // funkcija za brisanje dokumenta
     const handleDelete = async (id) => {
@@ -150,15 +154,19 @@ function DocumentManager(){
             </div>
 
                     {/* kad se zatvori forma menjamo boolean vrednost koja nam kaze da li je otvorena forma */}
-            <UploadForm isOpen={uploadFormOpen} onClose={()=>
+            <UploadForm isOpen={uploadFormOpen} editingDoc={editingDoc} allTags={allTags} onClose={()=>
                 {
                     setUploadFormOpen(false)
+                    setEditingDoc(null)//mozda redudantno al za svaki slucaj
                     getDocuments(); // kad se zatvori forma se refreshuju dokumenta u listi
                     getTags();
+                    
                 }}></UploadForm>
 
             <div className="fixed bottom-12  self-center items-center z-50"
-                onClick={()=> setUploadFormOpen(true)}>
+                onClick={()=> {setEditingDoc(null); setUploadFormOpen(true);
+                    //editingDoc se brise iz hooka
+                    }}> 
             <ButtonComponent label="upload document" textColor=" text-[#DEFF5C]" ></ButtonComponent>
             </div>
         </main>
