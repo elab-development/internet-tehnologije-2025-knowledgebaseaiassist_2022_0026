@@ -139,3 +139,4 @@ STATIC_URL = 'static/'
 
 CORS_ALLOWED_ORIGINS = [os.environ.get('CORS_ALLOWED_ORIGIN', 'http://localhost:5173'),] # moze da se doda posle kad se deployuje na cloud
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = ['https://internet-tehnologije-2025-rhzz.onrender.com', ] # render backend url
