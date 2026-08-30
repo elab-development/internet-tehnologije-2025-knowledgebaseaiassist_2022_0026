@@ -1,5 +1,9 @@
 FROM node:20-alpine AS build
 
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL 
+# za render deploy
+
 WORKDIR /app
 
 # instalira se sve iz package.json prvo
