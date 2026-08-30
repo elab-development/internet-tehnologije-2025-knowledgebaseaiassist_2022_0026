@@ -28,6 +28,7 @@ class ParagraphSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Paragraph
         fields = '__all__'
+        read_only_fields = ['document']
 
 class DocumentSerializer(serializers.ModelSerializer):
     #tags = serializers.PrimaryKeyRelatedField( many=True, queryset=Tag.objects.all(), required=False )

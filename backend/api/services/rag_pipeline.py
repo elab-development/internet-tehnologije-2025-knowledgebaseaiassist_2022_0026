@@ -4,7 +4,7 @@ from .vector_store import search_similar_paragraphs
 import os
 
 OLLAMA_BASE_URL = os.environ.get('OLLAMA_BASE_URL', 'http://localhost:11434')
-llm = OllamaLLM(model="llama3.2:latest", base_url=OLLAMA_BASE_URL)
+llm = OllamaLLM(model="llama3.2:3b", base_url=OLLAMA_BASE_URL)
 
 prompt_template = PromptTemplate(
     input_variables=["context", "question"],
@@ -46,12 +46,18 @@ def answer_question(user, question, top_k=4):
     except Exception as e:
         raise Exception(f"Greska pri generisanju odgovora: {e}")
 
-    sources = [{
+    seen_documents = set()
+    sources = []
+
+    for m in matches:
+        if m["document_id"] in seen_documents:
+            continue
+        seen_documents.add(m["document_id"])
+        sources.append({
             "document_id": m["document_id"],
             "document_title": m["document_title"],
             "paragraph_id": m["paragraph_id"],
             "content": m["content"][:200]
-        }
-        for m in matches] # za svaki match se dodaje element u promenljivu sources
+        }) # dokument se dodaje u izvor samo ako vec nije u izvoru
 
     return {"answer": answer, "sources": sources}
