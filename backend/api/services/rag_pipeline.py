@@ -4,7 +4,7 @@ from .vector_store import search_similar_paragraphs
 import os
 
 OLLAMA_BASE_URL = os.environ.get('OLLAMA_BASE_URL', 'http://localhost:11434')
-llm = OllamaLLM(model="llama3.2:3b", base_url=OLLAMA_BASE_URL)
+llm = OllamaLLM(model=os.environ.get('OLLAMA_BASE_MODEL','llama3.2'), base_url=OLLAMA_BASE_URL)
 
 prompt_template = PromptTemplate(
     input_variables=["context", "question"],

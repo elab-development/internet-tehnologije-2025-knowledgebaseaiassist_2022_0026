@@ -46,6 +46,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [ # samo ulogovani smeju da pristupe
         "rest_framework.permissions.IsAuthenticated", # pristupanje endpointima smo ako je auth
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = { 
@@ -62,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "api.apps.ApiConfig",
+    "drf_spectacular",
     "rest_framework",# registruje DRF, odatle uziammo stvari za api kreiranje i za serializers
     "corsheaders" # dozvoljava komunikaciju izmedju razlicitih domena, tj bekend i frontend
 ]
@@ -150,3 +152,8 @@ CORS_ALLOW_CREDENTIALS = False
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS + [
     'https://internet-tehnologije-2025-rhzz.onrender.com',
 ]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Personal Knowledge Base AI Assistant API',
+    'VERSION': '1.0.0',
+}

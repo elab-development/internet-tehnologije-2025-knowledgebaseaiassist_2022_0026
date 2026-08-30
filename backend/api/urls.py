@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
     path("user/register/", views.RegisterUserView.as_view(), name="register"),# as_view fakticki poziva klasu
@@ -18,4 +19,6 @@ urlpatterns = [
     path("tag/delete/<int:pk>/", views.DeleteTagView.as_view(), name="delete_tag"),
     path("tag/edit/<int:pk>/", views.EditTagView.as_view(), name="edit_tag"),
     path("chat/ask/", views.ChatView.as_view(), name="chat_ask"),
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
 ]
