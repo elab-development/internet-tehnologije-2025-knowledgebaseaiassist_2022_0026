@@ -151,9 +151,9 @@ function AIChat(){
                                 {msg.answer}
                                 {msg.sources?.length > 0 && (
                                     <div className="flex flex-wrap gap-2 italic">
-                                        {msg.sources.map((s, j) => (
-                                            <span key={j} className="   py-1 rounded-full">
-                                                /{s.document_title}/ 
+                                        {[...new Map(msg.sources.map(s => [s.document_id, s])).values()].map((s, j) => (
+                                            <span key={j} className="py-1 rounded-full">
+                                                 /{s.document_title}kk/ 
                                             </span>
                                         ))}
                                     </div>
