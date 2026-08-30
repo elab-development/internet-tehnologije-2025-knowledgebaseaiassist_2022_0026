@@ -144,7 +144,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-CORS_ALLOWED_ORIGINS = [os.environ.get('CORS_ALLOWED_ORIGIN', 'http://localhost:5173'),] # moze da se doda posle kad se deployuje na cloud
+CORS_ALLOWED_ORIGINS = [os.environ.get('CORS_ALLOWED_ORIGIN', 'http://localhost:5173'),]
 CORS_ALLOW_CREDENTIALS = False
 
-CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS + [
+    'https://internet-tehnologije-2025-rhzz.onrender.com',
+]
