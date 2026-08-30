@@ -33,7 +33,7 @@ def answer_question(user, question, top_k=4):
 
     if not matches:
         return {
-            "answer": "Nemam dovoljno informacija iz vasih dokumenata da odgovorim na ovo pitanje.",
+            "answer": "I do not have enough information in your knowledge base to answer this question.",
             "sources": []
         }
 
