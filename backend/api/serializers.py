@@ -22,7 +22,7 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = '__all__'
-        extra_kwargs = {"user":{"read_only":True}}
+        extra_kwargs = {"user":{"read_only":True}} # to sto je read only se setuje kroz views
         
 class ParagraphSerializer(serializers.ModelSerializer):
     class Meta: 
@@ -31,12 +31,21 @@ class ParagraphSerializer(serializers.ModelSerializer):
         read_only_fields = ['document']
 
 class DocumentSerializer(serializers.ModelSerializer):
-    #tags = serializers.PrimaryKeyRelatedField( many=True, queryset=Tag.objects.all(), required=False )
-    
     class Meta:
         model = Document
         fields = '__all__' # samo uzme sva polja iz document
         read_only_fields = ['user', 'file_type', 'uploaded_at'] # setovano od strane backa, nije nesto sto cemo mi uneti
+
+    # tag ne sme da bude read_only jer bi to znacilo da korisnik ne sme da ga postavlja
+    # zato ova metoda proverava da li je tag ispravan za taj dokument kako bi se izbegao idor
+    # odnosno proverava da li ti tagovi pripadaju tom useru
+    # da nema ovog user bi mogao da postavi tagove sa nekim random idevima RPOVERITI TO POSEL
+    def validate_tags(self, value):
+        request = self.context.get("request")
+        for tag in value:
+            if tag.user_id != request.user.id:
+                raise serializers.ValidationError("Tag ne postoji.")
+        return value
 
     # da bi se pri citanju dokumenata iz baze, front dobijao Tag objekte a ne ideve
     def to_representation(self, instance):

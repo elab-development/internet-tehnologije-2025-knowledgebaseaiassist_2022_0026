@@ -11,7 +11,7 @@ class RegisterTests(APITestCase):
             "password": "SigurnaLozinka123",
             "email": "novi@test.com",
         })
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED) # da li je uspesno kreirano
         self.assertTrue(User.objects.filter(username="novikorisnik").exists())
 
     def test_register_hashes_password(self):
@@ -21,7 +21,7 @@ class RegisterTests(APITestCase):
             "email": "novi2@test.com",
         })
         user = User.objects.get(username="novikorisnik2")
-        self.assertNotEqual(user.password, "SigurnaLozinka123")
+        self.assertNotEqual(user.password, "SigurnaLozinka123") # ne sme biti isto jer loz mora biti heshovana
 
     def test_register_password_not_in_response(self):
         response = self.client.post("/api/user/register/", {
@@ -29,7 +29,7 @@ class RegisterTests(APITestCase):
             "password": "SigurnaLozinka123",
             "email": "novi3@test.com",
         })
-        self.assertNotIn("password", response.data)
+        self.assertNotIn("password", response.data) 
 
     def test_register_duplicate_username_fails(self):
         User.objects.create_user(username="postojeci", password="Lozinka123")
@@ -53,7 +53,7 @@ class LoginTests(APITestCase):
             "username": "loginuser",
             "password": "TacnaLozinka123",
         })
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK) # provera logina i tokena
         self.assertIn("access", response.data)
         self.assertIn("refresh", response.data)
 

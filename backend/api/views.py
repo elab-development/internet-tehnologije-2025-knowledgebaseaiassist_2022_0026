@@ -62,7 +62,7 @@ class RegisterUserView(generics.CreateAPIView):
     permission_classes = [AllowAny] # svako moze da kreira novog usera
 
 class DeleteUserView(generics.DestroyAPIView): 
-    def get_queryset(self): # ako je staff moze da brise sve, ako nije ne moze nista
+    def get_queryset(self): # ako je staff moze da brise sve, ako nije ne moze nista, zbog ovoga je idor resen
         if self.request.user.is_staff:
             return User.objects.all()
         return User.objects.filter(id=self.request.user.id) # ispravljeno, User nema polje "user", filtriramo po id-ju
@@ -76,7 +76,7 @@ class DeleteUserView(generics.DestroyAPIView):
 
 class UploadDocumentView(generics.ListCreateAPIView): # jer kreiramo red u tabeli
     def get_queryset(self):
-        if self.request.user.is_superuser: # ako je staff onda vidi sve
+        if self.request.user.is_staff: # ako je staff onda vidi sve
             return Document.objects.all()
         user = self.request.user # user postaje trenutno ulogovani user
         return Document.objects.filter(user=user) # ne veacamo sve dokumente, nego filtriramo samo one od ulogovanog usera
@@ -137,7 +137,7 @@ class DeleteDocumentView(generics.DestroyAPIView):
             return Document.objects.all()
         user = self.request.user 
         return Document.objects.filter(user=user)
-    # takodje dodati da admin moz brise sve
+    
     serializer_class = DocumentSerializer # ovo mzd ni ne treba
     permission_classes = [IsAuthenticated]
 
