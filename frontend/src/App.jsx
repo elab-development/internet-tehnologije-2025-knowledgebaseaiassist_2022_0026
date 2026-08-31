@@ -7,6 +7,7 @@ import Register from './pages/Register'
 import AIChat from './pages/AIChat'
 import DocumentManager from './pages/DocumentManager'
 import ProtectedRoute from './components/ProtectedRoute'
+import Statistics from './pages/Statistics'
 import './output.css'
 
 function Logout(){
@@ -31,6 +32,7 @@ function App() {
         <Route path = "/login" element={ <Login/>}/>
         <Route path = "/logout" element={ <Logout/>}/>
         <Route path = "/register" element={ <RegisterAndLogout/>}/>
+        <Route path="/statistics" element={ <ProtectedRoute> <Statistics/> </ProtectedRoute>}/>
         <Route path = "*" element={ <NotFound/>}/>
       </Routes>
     </BrowserRouter>

@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
 
 from .services.rag_pipeline import answer_question
 from .services.parsers import extract_raw_text
@@ -15,6 +17,49 @@ from .models import Document, Conversation, Tag
 
 import os
 # umesto da se vraca render kao kod klasicnog Djanga, kreiraju se fje/klase koje primaju json podatke za react frontend
+
+class DocumentStatsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        documents = Document.objects.filter(user=request.user)
+
+        # broj dokumenata po tipu fajla
+        by_type = (
+            documents.values("file_type")
+            .annotate(count=Count("id"))
+            .order_by("-count")
+        )
+
+        # broj dokumenata po mesecu
+        by_month = (
+            documents
+            .annotate(month=TruncMonth("uploaded_at"))
+            .values("month")
+            .annotate(count=Count("id"))
+            .order_by("month")
+        )
+
+        # broj dokumenata po tagu, dokument moze imati vise tagova
+        by_tag = (
+            documents
+            .exclude(tags__isnull=True)
+            .values("tags__name", "tags__color")
+            .annotate(count=Count("id"))
+            .order_by("-count")
+        )
+
+        return Response({
+            "by_type": list(by_type),
+            "by_month": [
+                {"month": item["month"].strftime("%Y-%m"), "count": item["count"]}
+                for item in by_month
+            ],
+            "by_tag": [
+                {"name": item["tags__name"], "color": item["tags__color"], "count": item["count"]}
+                for item in by_tag
+            ],
+        })
 
 class ChatView(APIView):
     permission_classes = [IsAuthenticated]

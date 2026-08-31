@@ -1,14 +1,16 @@
 import { useNavigate } from "react-router-dom";
 
-function SideMenuComponent({navigateTo, label, side}){
+function SideMenuComponent({navigateTo, label, side, stackIndex = 0, stackCount = 1}){
   const navigate = useNavigate() // ne moze a href jer se brise state i osvezava stranica
+
+  const heightPercent = 100 / stackCount // ako ima vise dugmadi na istoj strani, deli visinu medju njima
 
   const style = {
     position: "fixed",
-    top: 0,
+    top: `${stackIndex * heightPercent}vh`, // pomera dugme na njegov deo visine ekrana
     [side]: 0, // left: 0 ili right: 0
 
-    height: "100vh",
+    height: `${heightPercent}vh`, // deo visine umesto pune, ako ih ima vise
     color: "black", 
     display: "flex",
     alignItems: "center",
