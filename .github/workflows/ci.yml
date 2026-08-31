@@ -1,6 +1,6 @@
 name: CI
 
-on:
+on: # triggeri
   pull_request:
     branches: [ main ]
   push:
@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # preuzima kod sa gha i stavlja na vm
 
       - name: Set up Python
         uses: actions/setup-python@v5

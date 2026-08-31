@@ -1,0 +1,22 @@
+name: CD
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-docker-images:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build backend Docker image
+        run: docker build -t backend-image:latest ./backend
+
+      - name: Build frontend Docker image
+        run: |
+          docker build \
+            --build-arg VITE_API_URL=https://internet-tehnologije-2025-rhzz.onrender.com \
+            -t frontend-image:latest ./frontend
