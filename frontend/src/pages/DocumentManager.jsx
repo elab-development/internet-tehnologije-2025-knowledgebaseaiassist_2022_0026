@@ -175,6 +175,15 @@ function DocumentManager(){
         navigateTo="/ai_chat"
         label = "AI chat"
         side = "left"
+        stackIndex={0}
+        stackCount={2}
+        ></SideMenuComponent>
+        <SideMenuComponent
+        navigateTo="/statistics"
+        label = "stats"
+        side = "left"
+        stackIndex={1}
+        stackCount={2}
         ></SideMenuComponent>
         </aside>
         <aside>

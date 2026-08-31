@@ -21,4 +21,5 @@ urlpatterns = [
     path("chat/ask/", views.ChatView.as_view(), name="chat_ask"),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path("docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+    path("stats/documents/", views.DocumentStatsView.as_view(), name="document_stats"),
 ]
